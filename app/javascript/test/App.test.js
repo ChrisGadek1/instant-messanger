@@ -6,6 +6,5 @@ describe("App", () => {
     it('renders App component without crash', () => {
         const wrapper = shallow(<App />)
 
-        expect(wrapper.text()).toBe("Hello World")
     });
 });
