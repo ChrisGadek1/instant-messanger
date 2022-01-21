@@ -3,6 +3,5 @@ class LoginController < ApplicationController
   end
 
   def check_login
-
   end
 end

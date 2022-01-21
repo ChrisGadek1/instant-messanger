@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import axios from "axios";
 
 const Login = () => {
 
@@ -10,7 +11,17 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e);
+        axios({
+            method: "POST",
+            url: '/login',
+            data:{
+                authenticity_token: document.querySelector("meta[name=csrf-token]").content,
+                email: login,
+                password
+            },
+            headers: {'X-CSRF-Token': document.querySelector("meta[name=csrf-token]").content,
+                      'Content-Type': 'application/json'}
+        })
     }
 
     return(
