@@ -3,7 +3,7 @@ import Logout from "./Logout";
 
 const Content = () => {
     return(
-        <div className="container-fluid d-flex justify-content-center page-content">
+        <div className="d-flex justify-content-center content align-items-center">
             <Logout />
         </div>
     )

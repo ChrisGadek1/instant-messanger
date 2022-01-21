@@ -6,8 +6,12 @@
   height: 25vh;
 }
 
+.content{
+  min-height: 100vh;
+}
+
 .page-content{
-  flex: 1 0 auto;
+  min-height: 100vh;
 }
 
 .footer{
