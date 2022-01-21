@@ -1,6 +1,6 @@
 import React from "react";
 
-const Logout = () => {
+const DashboardNotLogged = () => {
     return(
         <div className="card logout border-primary col-8">
             <div className="card-img-top welcome-image"></div>
@@ -12,4 +12,4 @@ const Logout = () => {
     )
 }
 
-export default Logout;
+export default DashboardNotLogged;

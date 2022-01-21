@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'main/index'
+  get 'dashboard/index'
   root 'main#index'
   get '/login', to: "login#login"
 
