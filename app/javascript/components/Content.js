@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import Login from "./login/login";
 import Dashboard from "./dashboard/Dashboard";
+import Register from "./register/Register";
 
 const Content = () => {
     return(
@@ -12,6 +13,7 @@ const Content = () => {
             <Routes>
                 <Route path="/" exact element={<Dashboard />}/>
                 <Route path="/login" exact element={<Login />}/>
+                <Route path="/users/new" exact element={<Register />}/>
             </Routes>
         </div>
     )

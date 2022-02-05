@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const Login = () => {
 
@@ -39,6 +40,7 @@ const Login = () => {
                             <input className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
                         </label>
                         <input type="submit" className="btn btn-outline-primary" value="Login"/>
+                        <p>Don't have an account? Create it <Link to="/users/new">here</Link></p>
                     </form>
 
                 </div>
