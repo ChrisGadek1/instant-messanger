@@ -4,5 +4,8 @@ Rails.application.routes.draw do
   get '/login', to: "login#login"
   post '/login', to: "login#check_login"
 
-  resources :users
+  resources :users do
+    post :get_by_email, on: :collection, to: "users#get_by_email"
+    post :get_by_username, on: :collection, to: "users#get_by_username"
+  end
 end

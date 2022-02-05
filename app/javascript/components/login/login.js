@@ -16,12 +16,11 @@ const Login = () => {
             method: "POST",
             url: '/login',
             data:{
-                authenticity_token: document.querySelector("meta[name=csrf-token]").content,
                 email: login,
                 password
             },
-            headers: {'X-CSRF-Token': document.querySelector("meta[name=csrf-token]").content,
-                      'Content-Type': 'application/json'}
+            headers: {
+                'Content-Type': 'application/json'}
         })
     }
 
