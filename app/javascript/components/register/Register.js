@@ -26,19 +26,32 @@ const Register = () => {
     const handleEmailChange = (e) => setEmail(e.target.value);
 
     const validate = (value, name) => {
+        let letterNumber = /^[0-9a-zA-Z]+$/;
         if(value.length < 2){
             return `${name} must be longer than 1 character`
         }
         else if(value.length > 100){
-            return `${name} Name must be shorter than 100 characters`
+            return `${name} must be shorter than 100 characters`
+        }
+        else if(name !== "password" && name !== "email" && !value.match(letterNumber)){
+            return `${name} must contain only digits and numbers`
         }
         return ""
+    }
+
+    const validateEmail = (value, name) => {
+        let result = validate(value, "email");
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!value.toLowerCase().match(emailRegex)){
+            result = `This is not a correct email`
+        }
+        return result;
     }
 
     const validatePassword = (value) => {
         let result = validate(value, "password");
         if(value.length < 8){
-            result = "must be longer than 8 characters";
+            result = "password must be longer than 7 characters";
         }
         return result;
     }
@@ -69,14 +82,19 @@ const Register = () => {
                     resolve("");
                 }
             }).catch(e => {
+                console.error(e)
                 reject("there was an error with connection")
             })
         })
     }
 
-    const validateFromApi = async (value, name, url, testData) => {
+    const validateFromApi = async (value, name, url, testData, isEmail) => {
         return new Promise((resolve) => {
-            let result = validate(value, name)
+            let result = "";
+            result = validate(value, name)
+            if(isEmail && result === ""){
+                result = validateEmail(value, name)
+            }
             if(result === ""){
                 result = getIsTakenError(value, name, url, testData);
             }
@@ -91,13 +109,15 @@ const Register = () => {
         setPasswordError(validatePassword(password));
         setRepeatedPasswordError(validateRepeatPassword(repeatPassword));
         try{
-            setEmailError(await validateFromApi(email, "email", "/users/get_by_email", "isTaken"));
+            const newError = await validateFromApi(email, "email", "/users/get_by_email", "isTaken", true);
+            setEmailError(newError);
         }
         catch (e){
             setEmailError(e);
         }
         try{
-            setUsernameError(await validateFromApi(username, "username", "/users/get_by_username", "isTaken"));
+            const newError = await validateFromApi(username, "username", "/users/get_by_username", "isTaken", false)
+            setUsernameError(newError);
         }
         catch (e){
             setUsernameError(e);
@@ -112,32 +132,32 @@ const Register = () => {
                 <form onSubmit={handleSubmit}>
                     <label className="row mb-3">
                         Name
-                        <input className="form-control" type="text" value={name} onChange={handleNameChange}/>
+                        <input name="name" className="form-control" type="text" value={name} onChange={handleNameChange}/>
                         <p className="small alert-danger">{nameError}</p>
                     </label>
                     <label className="row mb-3">
                         Surname
-                        <input className="form-control" type="text" value={surname} onChange={handleSurnameChange}/>
+                        <input name="surname" className="form-control" type="text" value={surname} onChange={handleSurnameChange}/>
                         <p className="small alert-danger">{surnameError}</p>
                     </label>
                     <label className="row mb-3">
                         Username
-                        <input className="form-control" type="text" value={username} onChange={handleUsernameChange}/>
+                        <input name="username" className="form-control" type="text" value={username} onChange={handleUsernameChange}/>
                         <p className="small alert-danger">{usernameError}</p>
                     </label>
                     <label className="row mb-3">
                         Email
-                        <input className="form-control" type="email" value={email} onChange={handleEmailChange}/>
+                        <input name="email" className="form-control" type="email" value={email} onChange={handleEmailChange}/>
                         <p className="small alert-danger">{emailError}</p>
                     </label>
                     <label className="row mb-3">
                         Password
-                        <input className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
+                        <input name="password" className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
                         <p className="small alert-danger">{passwordError}</p>
                     </label>
                     <label className="row mb-3">
                         Repeat Password
-                        <input className="form-control" type="password" value={repeatPassword} onChange={handleRepeatPasswordChange}/>
+                        <input id="register-repeated-password" className="form-control" type="password" value={repeatPassword} onChange={handleRepeatPasswordChange}/>
                         <p className="small alert-danger">{repeatedPasswordError}</p>
                     </label>
                     <input type="submit" className="btn btn-outline-primary"/>
