@@ -1,8 +1,13 @@
 import React from "react";
 
-const DashboardLogged = () => {
+const DashboardLogged = ({name, surname}) => {
     return(
-        <div></div>
+        <div className="card logout border-primary col-8">
+            <div className="card-body">
+                <h5 className="card-title">Welcome {name} {surname}</h5>
+                <p className="card-text">asdasd</p>
+            </div>
+        </div>
     )
 }
 

@@ -142,7 +142,8 @@ const Register = () => {
                     surname,
                     email,
                     password,
-                    username
+                    username,
+                    authenticity_token: document.querySelector("meta[name=csrf-token]").content
                 },
                 headers: {
                     'Content-Type': 'application/json'

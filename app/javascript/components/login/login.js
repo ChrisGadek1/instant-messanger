@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Login = () => {
 
+    const navigate = useNavigate();
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
 
@@ -16,11 +17,16 @@ const Login = () => {
             method: "POST",
             url: '/login',
             data:{
+                authenticity_token: document.querySelector("meta[name=csrf-token]").content,
                 email: login,
                 password
             },
             headers: {
                 'Content-Type': 'application/json'}
+        }).then(({data}) => {
+            navigate("/");
+        }).catch(e => {
+            console.log(e);
         })
     }
 
