@@ -15,6 +15,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
 
     const [showDialog, setShowDialog] = useState(false);
+    const [showSpinner, setShowSpinner] = useState(false);
 
     const [nameError, setNameError] = useState("");
     const [surnameError, setSurnameError] = useState("");
@@ -110,6 +111,7 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setShowSpinner(true);
         setNameError(validate(name, "name"));
         setSurnameError(validate(surname, "surname"));
         setPasswordError(validatePassword(password));
@@ -147,6 +149,9 @@ const Register = () => {
                 }
             }).then(({data}) => {
                 setShowDialog(true)
+                setShowSpinner(false);
+            }).catch(e => {
+                setShowSpinner(false);
             })
         }
 
@@ -200,6 +205,7 @@ const Register = () => {
                         </label>
                         <input type="submit" className="btn btn-outline-primary"/>
                     </form>
+                    { showSpinner ? <div className="spinner-border m-4" role="status"></div> : null }
                 </div>
             </div>
         </>
