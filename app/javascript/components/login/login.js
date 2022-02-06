@@ -1,12 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {addUser} from "../../redux/actions/userActions";
 
 const Login = () => {
 
     const navigate = useNavigate();
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+
+    const dispatcher = useDispatch();
+    const user  = useSelector(store => store.user);
+
+    useEffect(() => {
+        if(user !== null && user.name !== undefined){
+            navigate("/");
+        }
+    },[user])
 
     const handleLoginChange = (e) => setLogin(e.target.value)
     const handlePasswordChange = (e) => setPassword(e.target.value)
@@ -24,6 +35,12 @@ const Login = () => {
             headers: {
                 'Content-Type': 'application/json'}
         }).then(({data}) => {
+            dispatcher(addUser({
+                name: data.user.name,
+                surname: data.user.surname,
+                username: data.user.username,
+                email: data.user.email
+            }))
             navigate("/");
         }).catch(e => {
             console.log(e);
