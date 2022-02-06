@@ -9,6 +9,7 @@ import Register from "./register/Register";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {addUser, removeUser} from "../redux/actions/userActions";
+import UserDetails from "./user_details/UserDetails";
 
 const Content = () => {
 
@@ -41,6 +42,7 @@ const Content = () => {
                 <Route path="/" exact element={<Dashboard />}/>
                 <Route path="/login" exact element={<Login />}/>
                 <Route path="/users/new" exact element={<Register />}/>
+                <Route path="/users/:id" exact element={<UserDetails />}/>
             </Routes>
         </div>
     )
