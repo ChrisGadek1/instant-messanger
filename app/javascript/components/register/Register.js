@@ -1,7 +1,11 @@
 import React, {useState} from "react";
 import axios from "axios";
+import RegisterModal from "./RegisterModal";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
@@ -9,6 +13,8 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
+
+    const [showDialog, setShowDialog] = useState(false);
 
     const [nameError, setNameError] = useState("");
     const [surnameError, setSurnameError] = useState("");
@@ -139,53 +145,65 @@ const Register = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
+            }).then(({data}) => {
+                setShowDialog(true)
             })
         }
 
     }
 
+    const backToLogin = () => {
+        setShowDialog(false)
+        navigate("/login")
+    }
+
+    const login = () => {
+        setShowDialog(false)
+    }
+
     return(
-        <div className="card col-10 col-lg-4 p-4">
-            <h5 className="card-title">Register</h5>
-            <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                    <label className="row mb-3">
-                        Name
-                        <input name="name" className="form-control" type="text" value={name} onChange={handleNameChange}/>
-                        <p className="small alert-danger">{nameError}</p>
-                    </label>
-                    <label className="row mb-3">
-                        Surname
-                        <input name="surname" className="form-control" type="text" value={surname} onChange={handleSurnameChange}/>
-                        <p className="small alert-danger">{surnameError}</p>
-                    </label>
-                    <label className="row mb-3">
-                        Username
-                        <input name="username" className="form-control" type="text" value={username} onChange={handleUsernameChange}/>
-                        <p className="small alert-danger">{usernameError}</p>
-                    </label>
-                    <label className="row mb-3">
-                        Email
-                        <input name="email" className="form-control" type="email" value={email} onChange={handleEmailChange}/>
-                        <p className="small alert-danger">{emailError}</p>
-                    </label>
-                    <label className="row mb-3">
-                        Password
-                        <input name="password" className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
-                        <p className="small alert-danger">{passwordError}</p>
-                    </label>
-                    <label className="row mb-3">
-                        Repeat Password
-                        <input id="register-repeated-password" className="form-control" type="password" value={repeatPassword} onChange={handleRepeatPasswordChange}/>
-                        <p className="small alert-danger">{repeatedPasswordError}</p>
-                    </label>
-                    <input type="submit" className="btn btn-outline-primary"/>
-                </form>
+        <>
+            <RegisterModal show={showDialog} login={login} backToLogin={backToLogin} />
+            <div className="card col-10 col-lg-4 p-4">
+                <h5 className="card-title">Register</h5>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                        <label className="row mb-3">
+                            Name
+                            <input name="name" className="form-control" type="text" value={name} onChange={handleNameChange}/>
+                            <p className="small alert-danger">{nameError}</p>
+                        </label>
+                        <label className="row mb-3">
+                            Surname
+                            <input name="surname" className="form-control" type="text" value={surname} onChange={handleSurnameChange}/>
+                            <p className="small alert-danger">{surnameError}</p>
+                        </label>
+                        <label className="row mb-3">
+                            Username
+                            <input name="username" className="form-control" type="text" value={username} onChange={handleUsernameChange}/>
+                            <p className="small alert-danger">{usernameError}</p>
+                        </label>
+                        <label className="row mb-3">
+                            Email
+                            <input name="email" className="form-control" type="email" value={email} onChange={handleEmailChange}/>
+                            <p className="small alert-danger">{emailError}</p>
+                        </label>
+                        <label className="row mb-3">
+                            Password
+                            <input name="password" className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
+                            <p className="small alert-danger">{passwordError}</p>
+                        </label>
+                        <label className="row mb-3">
+                            Repeat Password
+                            <input id="register-repeated-password" className="form-control" type="password" value={repeatPassword} onChange={handleRepeatPasswordChange}/>
+                            <p className="small alert-danger">{repeatedPasswordError}</p>
+                        </label>
+                        <input type="submit" className="btn btn-outline-primary"/>
+                    </form>
+                </div>
             </div>
+        </>
 
-
-
-        </div>
     )
 }
 
