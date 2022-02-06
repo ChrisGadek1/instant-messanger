@@ -15,4 +15,14 @@ class LoginController < ApplicationController
   def logout
     session[:user_id] = nil
   end
+
+  def is_logged
+    if current_user.nil?
+      render json: { is_logged: false }
+    else
+      render json: { is_logged: true }
+    end
+  end
+
+
 end

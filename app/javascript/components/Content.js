@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
     Route,
     Routes
@@ -6,8 +6,16 @@ import {
 import Login from "./login/login";
 import Dashboard from "./dashboard/Dashboard";
 import Register from "./register/Register";
+import axios from "axios";
 
 const Content = () => {
+
+    useEffect(() => {
+        axios.get("/is_logged").then(({data}) => {
+
+        })
+    })
+
     return(
         <div className="d-flex justify-content-center content align-items-center">
             <Routes>
