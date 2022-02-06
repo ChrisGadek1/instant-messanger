@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
-  get 'main/index'
+  get 'dashboard/index'
   root 'main#index'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get '/login', to: "login#login"
+  post '/login', to: "login#check_login"
+  get '/is_logged', to: "login#is_logged"
+  post '/logout', to: "login#logout"
 
-  # Defines the root path route ("/")
+  resources :users do
+    post :get_by_email, on: :collection, to: "users#get_by_email"
+    post :get_by_username, on: :collection, to: "users#get_by_username"
+  end
 end
