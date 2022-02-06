@@ -18,12 +18,20 @@ class UsersController < ApplicationController
     end
   end
 
-  def new
+  def new; end
 
+  def show; end
+
+  def create
+    user = User.new(user_params)
+    user.password = params[:password]
+    user.save!
   end
 
-  def show
+  private
 
+  def user_params
+    params.require(:user).permit(:username, :email, :password, :name, :surname)
   end
 
 end

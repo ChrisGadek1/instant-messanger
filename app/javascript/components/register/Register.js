@@ -108,19 +108,38 @@ const Register = () => {
         setSurnameError(validate(surname, "surname"));
         setPasswordError(validatePassword(password));
         setRepeatedPasswordError(validateRepeatPassword(repeatPassword));
+        let emailError = ""
         try{
-            const newError = await validateFromApi(email, "email", "/users/get_by_email", "isTaken", true);
-            setEmailError(newError);
+            emailError = await validateFromApi(email, "email", "/users/get_by_email", "isTaken", true);
+            setEmailError(emailError);
         }
         catch (e){
             setEmailError(e);
         }
+        let usernameError = ""
         try{
-            const newError = await validateFromApi(username, "username", "/users/get_by_username", "isTaken", false)
-            setUsernameError(newError);
+            usernameError = await validateFromApi(username, "username", "/users/get_by_username", "isTaken", false)
+            setUsernameError(usernameError);
         }
         catch (e){
             setUsernameError(e);
+        }
+
+        if(validate(name, "name") === "" && validate(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(repeatPassword) === "" && emailError === "" && usernameError === ""){
+            axios({
+                method: "POST",
+                url: "/users",
+                data:{
+                    name,
+                    surname,
+                    email,
+                    password,
+                    username
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
         }
 
     }

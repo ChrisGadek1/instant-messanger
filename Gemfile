@@ -5,6 +5,8 @@ ruby "3.0.2"
 
 gem 'react-rails'
 
+gem 'bcrypt'
+
 gem 'webpacker', '~> 4.3.x'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "dashboard"
