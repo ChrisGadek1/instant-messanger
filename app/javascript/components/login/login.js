@@ -10,6 +10,7 @@ const Login = () => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [loginError, setLoginError] = useState("");
+    const [showSpinner, setShowSpinner] = useState(false);
 
     const dispatcher = useDispatch();
     const user  = useSelector(store => store.user);
@@ -25,11 +26,12 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setShowSpinner(true)
         axios({
             method: "POST",
             url: '/login',
             data:{
-                authenticity_token: document.querySelector("meta[name=csrf-token]").content,
+                authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "",
                 email: login,
                 password
             },
@@ -37,6 +39,7 @@ const Login = () => {
                 'Content-Type': 'application/json'}
         }).then(({data}) => {
             setLoginError("")
+            setShowSpinner(false)
             dispatcher(addUser({
                 name: data.user.name,
                 surname: data.user.surname,
@@ -45,6 +48,7 @@ const Login = () => {
             }))
             navigate("/");
         }).catch(e => {
+            setShowSpinner(false)
             setLoginError("Sorry, that didn't work. Try again")
         })
     }
@@ -57,14 +61,15 @@ const Login = () => {
                     <form  onSubmit={handleSubmit}>
                         <label className="row mb-3">
                             Email
-                            <input className="form-control" type="email" value={login} onChange={handleLoginChange}/>
+                            <input name="login" className="form-control" type="email" value={login} onChange={handleLoginChange}/>
                         </label>
                         <label className="row mb-3">
                             Password
-                            <input className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
+                            <input name="login_password" className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
                         </label>
-                        <p className="small alert-danger">{loginError}</p>
+                        <p className="small alert-danger" id="login-error-label">{loginError}</p>
                         <input type="submit" className="btn btn-outline-primary" value="Login"/>
+                        { showSpinner ? <div className="spinner-border m-4" role="status"></div> : null }
                         <p>Don't have an account? Create it <Link to="/users/new">here</Link></p>
                     </form>
 

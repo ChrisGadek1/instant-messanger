@@ -7,6 +7,8 @@ import {BrowserRouter} from "react-router-dom";
 
 import Enzyme from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import {Provider} from "react-redux";
+import store from "../redux/store/store";
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -26,7 +28,7 @@ afterEach(() => {
 
 describe("Register Validations: ", () => {
     it("validates too short name in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='name']");
         nameInput.simulate('change', {target: {value: "a"}})
 
@@ -36,7 +38,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too long name in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='name']");
         nameInput.simulate('change', {target: {value: getStringWithLength(101) }})
 
@@ -46,7 +48,7 @@ describe("Register Validations: ", () => {
     })
 
     it("doesn't show errors if name is correct", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='name']");
         nameInput.simulate('change', {target: {value: "Kate" }})
 
@@ -56,7 +58,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too short surname in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='surname']");
         nameInput.simulate('change', {target: {value: "a"}})
 
@@ -66,7 +68,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too long surname in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='surname']");
         nameInput.simulate('change', {target: {value: getStringWithLength(101) }})
 
@@ -76,7 +78,7 @@ describe("Register Validations: ", () => {
     })
 
     it("doesn't show errors if surname is correct", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='surname']");
         nameInput.simulate('change', {target: {value: "Winston" }})
 
@@ -86,7 +88,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too short email in the register form",  async() => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
         nameInput.simulate('change', {target: {value: "a"}})
 
@@ -96,7 +98,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too long email in the register form", async() => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
         nameInput.simulate('change', {target: {value: getStringWithLength(101) }})
 
@@ -106,7 +108,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates wrong email format in the register form", async() => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
         nameInput.simulate('change', {target: {value: "asdasd" }})
 
@@ -118,7 +120,7 @@ describe("Register Validations: ", () => {
     it("validates already taken email in the register form", async() => {
         axios.mockResolvedValueOnce({data: {isTaken: true}});
 
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
         nameInput.simulate('change', {target: {value: "asdasd@wp.pl" }})
 
@@ -130,7 +132,7 @@ describe("Register Validations: ", () => {
     it("doesn't show errors if email is correct", () => {
         axios.mockResolvedValueOnce({data: {isTaken: false}});
         
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
         nameInput.simulate('change', {target: {value: "test@wp.pl" }})
 
@@ -140,7 +142,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too short username in the register form",  async() => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
         nameInput.simulate('change', {target: {value: "a"}})
 
@@ -150,7 +152,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too long username in the register form", async() => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
         nameInput.simulate('change', {target: {value: getStringWithLength(101) }})
 
@@ -162,7 +164,7 @@ describe("Register Validations: ", () => {
     it("validates already taken username in the register form", async() => {
         axios.mockResolvedValueOnce({data: {isTaken: true}});
 
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
         nameInput.simulate('change', {target: {value: "fajnynick" }})
 
@@ -174,7 +176,7 @@ describe("Register Validations: ", () => {
     it("doesn't show errors if username is correct", () => {
         axios.mockResolvedValueOnce({data: {isTaken: false}});
 
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
         nameInput.simulate('change', {target: {value: "someUsername112" }})
 
@@ -184,7 +186,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too short password in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='password']");
         nameInput.simulate('change', {target: {value: "asdadda"}})
 
@@ -194,7 +196,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates too long password in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='password']");
         nameInput.simulate('change', {target: {value: getStringWithLength(101) }})
 
@@ -204,7 +206,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates password that isn't identical to the repeated password", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='password']");
         const repeatedPassword = register.find("#register-repeated-password");
 
@@ -217,7 +219,7 @@ describe("Register Validations: ", () => {
     })
 
     it("doesn't show errors if password is correct", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='password']");
         const repeatedPassword = register.find("#register-repeated-password");
 
@@ -231,7 +233,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates name that contains other chars than digits and numbers in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='name']");
         nameInput.simulate('change', {target: {value: "a   "}})
 
@@ -241,7 +243,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates surname that contains other chars than digits and numbers in the register form", () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='surname']");
         nameInput.simulate('change', {target: {value: "a   ..."}})
 
@@ -251,7 +253,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates username that contains other chars than digits and numbers in the register form", async () => {
-        const register = mount(<BrowserRouter><Register /></BrowserRouter> );
+        const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
         nameInput.simulate('change', {target: {value: "a   ..."}})
 

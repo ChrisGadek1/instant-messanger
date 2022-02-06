@@ -6,6 +6,6 @@ describe("App", () => {
     it('renders App component without crash', () => {
         const wrapper = shallow(<App />)
 
-        expect(wrapper.text()).toContain("<BrowserRouter />")
+        expect(wrapper.text()).toContain("<Provider />")
     });
 });

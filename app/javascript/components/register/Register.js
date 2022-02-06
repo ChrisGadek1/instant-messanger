@@ -2,10 +2,13 @@ import React, {useState} from "react";
 import axios from "axios";
 import RegisterModal from "./RegisterModal";
 import { useNavigate } from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {addUser} from "../../redux/actions/userActions";
 
 const Register = () => {
 
     const navigate = useNavigate();
+    const dispatcher = useDispatch();
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
@@ -77,6 +80,7 @@ const Register = () => {
                 url: url,
                 data:{
                     value: value,
+                    authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -111,11 +115,11 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setShowSpinner(true);
         setNameError(validate(name, "name"));
         setSurnameError(validate(surname, "surname"));
         setPasswordError(validatePassword(password));
         setRepeatedPasswordError(validateRepeatPassword(repeatPassword));
+        setShowSpinner(true);
         let emailError = ""
         try{
             emailError = await validateFromApi(email, "email", "/users/get_by_email", "isTaken", true);
@@ -123,6 +127,7 @@ const Register = () => {
         }
         catch (e){
             setEmailError(e);
+            setShowSpinner(false);
         }
         let usernameError = ""
         try{
@@ -131,6 +136,7 @@ const Register = () => {
         }
         catch (e){
             setUsernameError(e);
+            setShowSpinner(false);
         }
 
         if(validate(name, "name") === "" && validate(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(repeatPassword) === "" && emailError === "" && usernameError === ""){
@@ -143,7 +149,7 @@ const Register = () => {
                     email,
                     password,
                     username,
-                    authenticity_token: document.querySelector("meta[name=csrf-token]").content
+                    authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -155,6 +161,9 @@ const Register = () => {
                 setShowSpinner(false);
             })
         }
+        else{
+            setShowSpinner(false);
+        }
 
     }
 
@@ -163,13 +172,35 @@ const Register = () => {
         navigate("/login")
     }
 
-    const login = () => {
-        setShowDialog(false)
+    const login = ({name, surname, username, email}) => {
+        axios({
+            method: "POST",
+            url: '/login',
+            data:{
+                authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "",
+                email,
+                password
+            },
+            headers: {
+                'Content-Type': 'application/json'}
+        }).then(({data}) => {
+            dispatcher(addUser({
+                name,
+                surname,
+                username,
+                email
+            }))
+            setShowDialog(false)
+            navigate("/");
+        }).catch(e => {
+            console.error(e);
+            setShowDialog(false)
+        })
     }
 
     return(
         <>
-            <RegisterModal show={showDialog} login={login} backToLogin={backToLogin} />
+            { showDialog ? <RegisterModal show={showDialog} login={() => login({name, surname, username, email})} backToLogin={backToLogin} /> : null}
             <div className="card col-10 col-lg-4 p-4">
                 <h5 className="card-title">Register</h5>
                 <div className="card-body">
