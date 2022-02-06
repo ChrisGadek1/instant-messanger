@@ -14,7 +14,7 @@ const Register = () => {
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
 
-    const [showDialog, setShowDialog] = useState(false);
+    const [showDialog, setShowDialog] = useState(true);
 
     const [nameError, setNameError] = useState("");
     const [surnameError, setSurnameError] = useState("");
