@@ -9,6 +9,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const [loginError, setLoginError] = useState("");
 
     const dispatcher = useDispatch();
     const user  = useSelector(store => store.user);
@@ -35,6 +36,7 @@ const Login = () => {
             headers: {
                 'Content-Type': 'application/json'}
         }).then(({data}) => {
+            setLoginError("")
             dispatcher(addUser({
                 name: data.user.name,
                 surname: data.user.surname,
@@ -43,7 +45,7 @@ const Login = () => {
             }))
             navigate("/");
         }).catch(e => {
-            console.log(e);
+            setLoginError("Sorry, that didn't work. Try again")
         })
     }
 
@@ -61,6 +63,7 @@ const Login = () => {
                             Password
                             <input className="form-control" type="password" value={password} onChange={handlePasswordChange}/>
                         </label>
+                        <p className="small alert-danger">{loginError}</p>
                         <input type="submit" className="btn btn-outline-primary" value="Login"/>
                         <p>Don't have an account? Create it <Link to="/users/new">here</Link></p>
                     </form>
