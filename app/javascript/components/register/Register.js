@@ -55,7 +55,7 @@ const Register = () => {
         setNameError(validateName(name, "name"));
         setSurnameError(validateName(surname, "surname"));
         setPasswordError(validatePassword(password));
-        setRepeatedPasswordError(validateRepeatPassword(repeatPassword));
+        setRepeatedPasswordError(validateRepeatPassword(password,repeatPassword));
         setShowSpinner(true);
         let emailError = ""
         try{
@@ -75,8 +75,7 @@ const Register = () => {
             setUsernameError(e);
             setShowSpinner(false);
         }
-
-        if(validateName(name, "name") === "" && validateName(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(repeatPassword) === "" && emailError === "" && usernameError === ""){
+        if(validateName(name, "name") === "" && validateName(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(password, repeatPassword) === "" && emailError === "" && usernameError === ""){
             axios({
                 method: "POST",
                 url: "/users",
@@ -125,7 +124,8 @@ const Register = () => {
                 name,
                 surname,
                 username,
-                email
+                email,
+                avatar: undefined
             }))
             setShowDialog(false)
             navigate("/");

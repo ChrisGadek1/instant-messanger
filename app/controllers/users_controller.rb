@@ -31,8 +31,17 @@ class UsersController < ApplicationController
       User.update!(id = user.id, name: params[:name], surname: params[:surname], username: params[:username], email: params[:email])
       render json: { status: 'OK', message: 'OK' }, status: :ok
     end
+  end
 
-
+  def attach_new_avatar
+    user = current_user
+    if user.nil?
+      render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
+             status: :unauthorized
+    else
+      user.avatar.attach(params[:image])
+      render json: { status: 'OK', message: '', url: url_for(user.avatar) }
+    end
   end
 
   def create
@@ -55,7 +64,7 @@ status: :internal_server_error
   private
 
   def user_params
-    params.require(:user).permit(:username, :email, :password, :name, :surname)
+    params.require(:user).permit(:username, :email, :password, :name, :surname, :avatar)
   end
 
 end

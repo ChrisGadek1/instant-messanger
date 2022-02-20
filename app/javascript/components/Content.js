@@ -27,7 +27,8 @@ const Content = () => {
                         name: data.name,
                         surname: data.surname,
                         username: data.username,
-                        email: data.email
+                        email: data.email,
+                        avatar: data.avatar
                     }))
                 }
             }

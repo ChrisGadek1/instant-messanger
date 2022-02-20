@@ -21,7 +21,7 @@ class LoginController < ApplicationController
     if current_user.nil?
       render json: { is_logged: false }
     else
-      render json: { is_logged: true, username: current_user.username, name: current_user.name, surname: current_user.surname, email: current_user.email }
+      render json: { is_logged: true, username: current_user.username, name: current_user.name, surname: current_user.surname, email: current_user.email, avatar: url_for(current_user.avatar) }
     end
   end
 

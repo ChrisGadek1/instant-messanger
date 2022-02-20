@@ -44,7 +44,8 @@ const Login = () => {
                 name: data.user.name,
                 surname: data.user.surname,
                 username: data.user.username,
-                email: data.user.email
+                email: data.user.email,
+                avatar: data.user.avatar
             }))
             navigate("/");
         }).catch(e => {

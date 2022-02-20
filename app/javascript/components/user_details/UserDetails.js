@@ -17,6 +17,7 @@ const UserDetails = () => {
     const [surname, setSurname] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
+    const [avatars, setAvatars] = useState([]);
 
     const [nameError, setNameError] = useState("");
     const [surnameError, setSurnameError] = useState("");
@@ -30,6 +31,7 @@ const UserDetails = () => {
     const handleSurnameChange = (e) => setSurname(e.target.value);
     const handleEmailChange = (e) => setEmail(e.target.value);
     const handleUsernameChange = (e) => setUsername(e.target.value);
+    const handleAvatarsChange = (e) => setAvatars([...e.target.files])
 
     const updateUser = (newUser) => {
         axios.put(`/users/${newUser.username}`, {
@@ -92,6 +94,16 @@ const UserDetails = () => {
         }
     }
 
+    const handleSubmitAvatarChange = (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append("image", avatars[0]);
+        formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
+        axios.post("/users/:user_id/attach_avatar", formData).then(({data}) => {
+            dispatcher(addUser({name: user.name, surname: user.surname, username: user.username, email: user.email, avatar: data.url}))
+        });
+    }
+
     useEffect(() => {
         if(user === null){
 
@@ -152,6 +164,20 @@ const UserDetails = () => {
                         <input type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
                         <p className="small alert-danger">{emailError}</p>
                     </form>
+                    <form className="mb-5" onSubmit={handleSubmitAvatarChange}>
+                        <label>
+                            avatar
+                            <input accept="image/*" className="form-control col-5" type="file" onChange={handleAvatarsChange}/>
+                        </label>
+                        <input type="submit" className="btn btn-outline-primary ms-2" value="Upload"/>
+                        <p className="small alert-danger">{emailError}</p>
+                    </form>
+                    { user !== null ?
+                        <div style={{width: "224px", padding: "10px", border: "2px solid black"}}>
+                            <img src={user.avatar} width="200px" height="200px" />
+                        </div>
+
+                        : null }
                 </Card.Body>
             </Card>
         </>

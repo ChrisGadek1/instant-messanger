@@ -5,6 +5,8 @@ class User < ApplicationRecord
   alphanumeric_regex = /\A[A-Za-z0-9]+\z/
   has_secure_password
 
+  has_one_attached :avatar
+
   validates :name, presence: true, length: { minimum: 2, maximum: 100 }, format: { with: alphanumeric_regex }
   validates :surname, presence: true, length: { minimum: 2, maximum: 100 }, format: { with: alphanumeric_regex }
   validates :username, presence: true, length: { minimum: 2, maximum: 100 }, uniqueness: true, format: { with: alphanumeric_regex, message: "this is not a valid email format" }

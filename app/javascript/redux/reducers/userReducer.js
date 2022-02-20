@@ -7,7 +7,8 @@ export const userReducer = (state = null, action) => {
                 name: action.payload.name,
                 surname: action.payload.surname,
                 username: action.payload.username,
-                email: action.payload.email
+                email: action.payload.email,
+                avatar: action.payload.avatar
             }
         case REMOVE_USER:
             return {}
