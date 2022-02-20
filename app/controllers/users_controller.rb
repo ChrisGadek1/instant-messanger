@@ -21,18 +21,18 @@ class UsersController < ApplicationController
   def new; end
 
   def show; end
-  
+
   def update
     user = current_user
     if user.nil?
       render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
              status: :unauthorized
     else
-      User.update(id = params[:id], user_params)
+      User.update!(id = user.id, name: params[:name], surname: params[:surname], username: params[:username], email: params[:email])
       render json: { status: 'OK', message: 'OK' }, status: :ok
     end
 
-    
+
   end
 
   def create

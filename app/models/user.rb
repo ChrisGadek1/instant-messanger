@@ -9,7 +9,6 @@ class User < ApplicationRecord
   validates :surname, presence: true, length: { minimum: 2, maximum: 100 }, format: { with: alphanumeric_regex }
   validates :username, presence: true, length: { minimum: 2, maximum: 100 }, uniqueness: true, format: { with: alphanumeric_regex, message: "this is not a valid email format" }
   validates :email, presence: true, length: { minimum: 2, maximum: 100 }, uniqueness: true, email: true
-  validates :password, presence: true, length: { minimum: 8, maximum: 1000 }
   
   scope :get_by_email, ->(email) { where(email: email) }
   scope :get_by_username, ->(username) { where(username: username) }
