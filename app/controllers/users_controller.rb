@@ -21,6 +21,19 @@ class UsersController < ApplicationController
   def new; end
 
   def show; end
+  
+  def update
+    user = current_user
+    if user.nil?
+      render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
+             status: :unauthorized
+    else
+      User.update(id = params[:id], user_params)
+      render json: { status: 'OK', message: 'OK' }, status: :ok
+    end
+
+    
+  end
 
   def create
     user = User.new(user_params)
@@ -29,11 +42,12 @@ class UsersController < ApplicationController
       begin
         user.save!
       rescue StandardError => e
-        render json: { status: "error", message: "Something went wrong. Couldn't register your account." }, status: :internal_server_error
+        render json: { status: 'error', message: "Something went wrong. Couldn't register your account." }, 
+status: :internal_server_error
       end
-      render json: { status: "OK", message: "" }, status: :created
+      render json: { status: 'OK', message: '' }, status: :created
     else
-      render json: { status: "Error", message: "Registration data isn't valid" }, status: :unprocessable_entity
+      render json: { status: 'Error', message: "Registration data isn't valid" }, status: :unprocessable_entity
     end
 
   end
