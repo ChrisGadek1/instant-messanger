@@ -1,14 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import RegisterModal from "./RegisterModal";
 import { useNavigate } from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addUser} from "../../redux/actions/userActions";
 
 const Register = () => {
 
     const navigate = useNavigate();
     const dispatcher = useDispatch();
+    const user = useSelector(store => store.user);
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
@@ -72,6 +73,12 @@ const Register = () => {
         }
         return ""
     }
+
+    useEffect(() => {
+        if(user !== null && user.name !== undefined){
+            navigate("/");
+        }
+    },[user])
 
     const getIsTakenError = (value, name, url, testData) => {
         return new Promise((resolve, reject) => {
