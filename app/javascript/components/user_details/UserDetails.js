@@ -52,7 +52,7 @@ const UserDetails = () => {
         e.preventDefault();
         setNameError(validateName(name, "name"));
         if(validateName(name) === ""){
-            updateUser({name, surname: user.surname, email: user.email, username: user.username})
+            updateUser({name, surname: user.surname, email: user.email, username: user.username, avatar: user.avatar})
         }
     }
 
@@ -60,7 +60,7 @@ const UserDetails = () => {
         e.preventDefault();
         setSurnameError(validateName(surname, "surname"));
         if(validateName(surname) === ""){
-            updateUser({name: user.name, surname, email: user.email, username: user.username})
+            updateUser({name: user.name, surname, email: user.email, username: user.username, avatar: user.avatar})
         }
     }
 
@@ -76,7 +76,7 @@ const UserDetails = () => {
             setUsernameError(e);
         }
         if(localUsernameError === ""){
-            updateUser({name: user.name, surname: user.surname, username, email: user.email})
+            updateUser({name: user.name, surname: user.surname, username, email: user.email, avatar: user.avatar})
         }
     }
 
@@ -91,7 +91,7 @@ const UserDetails = () => {
             setEmailError(e);
         }
         if(localEmailError === ""){
-            updateUser({name: user.name, surname: user.surname, username: user.username, email})
+            updateUser({name: user.name, surname: user.surname, username: user.username, email, avatar: user.avatar})
         }
     }
 
