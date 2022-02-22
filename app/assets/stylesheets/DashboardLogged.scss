@@ -1,0 +1,9 @@
+.column-divider{
+    width: 2px;
+    margin: 6px 0;
+    background: black;
+}
+
+.column-divider + div{
+  max-width: 350px;
+}
