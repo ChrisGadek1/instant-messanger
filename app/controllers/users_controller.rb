@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include ActionView::Helpers::AssetUrlHelper
 
   def get_by_email
     user = User.get_by_email(params[:value])
@@ -44,9 +45,21 @@ class UsersController < ApplicationController
     end
   end
 
+  def remove_avatar
+    user = current_user
+    if user.nil?
+      render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
+             status: :unauthorized
+    else
+      user.avatar.purge
+      render json: { status: 'OK', url: image_url('default-avatar.jpg') }
+    end
+  end
+
   def create
-    user = User.new(user_params)
+    user = User.new(name: params[:name], surname: params[:surname], email: params[:email], username: params[:username])
     user.password = params[:password]
+    user.avatar.attach(params[:avatar]) if params[:avatar] != 'null'
     if user.valid?
       begin
         user.save!
@@ -64,7 +77,7 @@ status: :internal_server_error
   private
 
   def user_params
-    params.require(:user).permit(:username, :email, :password, :name, :surname, :avatar)
+    params.require(:user).permit(:username, :email, :password, :name, :surname)
   end
 
 end

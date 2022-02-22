@@ -6,6 +6,7 @@ import axios from "axios";
 import {addUser} from "../../redux/actions/userActions";
 import ErrorModal from "../modals/ErrorModal";
 import {validateFromApi, validateName} from "../../validators/UserValidators";
+import data from "bootstrap/js/src/dom/data";
 
 const UserDetails = () => {
 
@@ -105,6 +106,20 @@ const UserDetails = () => {
         });
     }
 
+    const handleSubmitAvatarRemove = (e) => {
+        e.preventDefault();
+        axios.delete(`/users/${user.username}/remove_avatar`, {
+            data: {
+                authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
+            }
+        }).then(({data}) => {
+            dispatcher(addUser({name: user.name, surname: user.surname, email: user.email, username: user.username, avatar: data.url}))
+        }).catch((e) => {
+            setError(e.response.data.message);
+            setShow(true);
+        })
+    }
+
     useEffect(() => {
         if(user === null){
 
@@ -165,13 +180,15 @@ const UserDetails = () => {
                         <input type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
                         <p className="small alert-danger">{emailError}</p>
                     </form>
-                    <form className="mb-5" onSubmit={handleSubmitAvatarChange}>
+                    <form className="mb-1" onSubmit={handleSubmitAvatarChange}>
                         <label>
                             avatar
                             <input accept="image/*" className="form-control col-5" type="file" onChange={handleAvatarsChange}/>
                         </label>
                         <input type="submit" className="btn btn-outline-primary ms-2" value="Upload"/>
-                        <p className="small alert-danger">{emailError}</p>
+                    </form>
+                    <form className="mb-5" onSubmit={handleSubmitAvatarRemove}>
+                        <input type="submit" className="btn btn-outline-danger" value="Remove Avatar"/>
                     </form>
                     { user !== null ?
                         <div style={{width: "224px", padding: "10px", border: "2px solid black"}}>

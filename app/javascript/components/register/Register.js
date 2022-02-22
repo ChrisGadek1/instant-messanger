@@ -23,6 +23,8 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
+    const [avatar, setAvatar] = useState([]);
+    const handleAvatarChange = (e) => setAvatar([...e.target.files])
 
     const [showDialog, setShowDialog] = useState(false);
     const [showSpinner, setShowSpinner] = useState(false);
@@ -76,21 +78,15 @@ const Register = () => {
             setShowSpinner(false);
         }
         if(validateName(name, "name") === "" && validateName(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(password, repeatPassword) === "" && emailError === "" && usernameError === ""){
-            axios({
-                method: "POST",
-                url: "/users",
-                data:{
-                    name,
-                    surname,
-                    email,
-                    password,
-                    username,
-                    authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(({data}) => {
+            let formData = new FormData();
+            formData.append("name", name);
+            formData.append("surname", surname)
+            formData.append("email", email)
+            formData.append("password", password)
+            formData.append("username", username)
+            formData.append("avatar", avatar.length === 0 ? null : avatar[0])
+            formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
+            axios.post("/users", formData).then(({data}) => {
                 setShowDialog(true)
                 setShowSpinner(false);
             }).catch(e => {
@@ -125,7 +121,7 @@ const Register = () => {
                 surname,
                 username,
                 email,
-                avatar: undefined
+                avatar: data.avatar
             }))
             setShowDialog(false)
             navigate("/");
@@ -138,7 +134,7 @@ const Register = () => {
     return(
         <>
             { showDialog ? <RegisterModal show={showDialog} login={() => login({name, surname, username, email})} backToLogin={backToLogin} /> : null}
-            <div className="card col-10 col-lg-4 p-4">
+            <div className="card col-10 col-lg-4 p-4 mt-3 mb-3">
                 <h5 className="card-title">Register</h5>
                 <div className="card-body">
                     <form onSubmit={handleSubmit}>
@@ -172,6 +168,11 @@ const Register = () => {
                             <input id="register-repeated-password" className="form-control" type="password" value={repeatPassword} onChange={handleRepeatPasswordChange}/>
                             <p className="small alert-danger">{repeatedPasswordError}</p>
                         </label>
+                        <label>
+                            Avatar (Optional)
+                            <input accept="image/*" className="form-control col-5" type="file" onChange={handleAvatarChange}/>
+                        </label>
+                        <img className="row mb-4 mt-2" src={ avatar.length === 0 ? "/images/default-avatar.jpg" : URL.createObjectURL(avatar[0]) } width="200px" height="200px" />
                         <input type="submit" className="btn btn-outline-primary"/>
                     </form>
                     { showSpinner ? <div className="spinner-border m-4" role="status"></div> : null }
