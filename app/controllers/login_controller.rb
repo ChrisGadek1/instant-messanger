@@ -6,7 +6,7 @@ class LoginController < ApplicationController
     user = User.get_by_email(params[:email])
     if user.length > 0 && user[0].authenticate(params[:password])
       session[:user_id] = user[0].id
-      render json: { status: "OK", user: user[0] }, status: :ok
+      render json: { status: "OK", user: user[0], avatar: url_for(user[0].avatar) }, status: :ok
     else
       render json: { status: "Error" }, status: :unauthorized
     end
