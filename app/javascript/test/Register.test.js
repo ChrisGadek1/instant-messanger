@@ -118,7 +118,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates already taken email in the register form", async() => {
-        axios.mockResolvedValueOnce({data: {isTaken: true}});
+        axios.post.mockResolvedValueOnce({data: {isTaken: true}});
 
         const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
@@ -130,7 +130,7 @@ describe("Register Validations: ", () => {
     })
 
     it("doesn't show errors if email is correct", () => {
-        axios.mockResolvedValueOnce({data: {isTaken: false}});
+        axios.post.mockResolvedValueOnce({data: {isTaken: false}});
         
         const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='email']");
@@ -162,7 +162,7 @@ describe("Register Validations: ", () => {
     })
 
     it("validates already taken username in the register form", async() => {
-        axios.mockResolvedValueOnce({data: {isTaken: true}});
+        axios.post.mockResolvedValueOnce({data: {isTaken: true}});
 
         const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");
@@ -174,7 +174,7 @@ describe("Register Validations: ", () => {
     })
 
     it("doesn't show errors if username is correct", () => {
-        axios.mockResolvedValueOnce({data: {isTaken: false}});
+        axios.post.mockResolvedValueOnce({data: {isTaken: false}});
 
         const register = mount(<Provider store={store}><BrowserRouter><Register /></BrowserRouter></Provider>);
         const nameInput = register.find("input[name='username']");

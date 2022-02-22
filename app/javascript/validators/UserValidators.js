@@ -40,16 +40,9 @@ export const validateRepeatPassword = (password, repeatPassword) => {
 
 const getIsTakenError = (value, name, url, testData) => {
     return new Promise((resolve, reject) => {
-        axios({
-            method: "POST",
-            url: url,
-            data:{
+        axios.post(url,{
                 value: value,
                 authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
-            },
-            headers: {
-                'Content-Type': 'application/json'
-            }
         }).then(({data}) => {
             if(data[testData]){
                 resolve(`This ${name} is already taken`)

@@ -72,6 +72,7 @@ const UserDetails = () => {
             setUsernameError(localUsernameError);
         }
         catch (e){
+            console.log(e);
             setUsernameError(e);
         }
         if(localUsernameError === ""){
@@ -131,16 +132,16 @@ const UserDetails = () => {
                     <Card.Title>My Account</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    <form className="mb-5" onSubmit={handleSubmitNameChange}>
+                    <form id="name-change-form" className="mb-5" onSubmit={handleSubmitNameChange}>
                         <label>
                             Name
                             <input className="form-control col-5 m-1" type="text" value={name} onChange={handleNameChange}/>
                         </label>
-                        <input type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
+                        <input id="submit-name-change" type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
                         <p className="small alert-danger">{nameError}</p>
                     </form>
 
-                    <form className="mb-5" onSubmit={handleSubmitSurnameChange}>
+                    <form id="surname-change-form" className="mb-5" onSubmit={handleSubmitSurnameChange}>
                         <label>
                             Surname
                             <input className="form-control col-5" type="text" value={surname} onChange={handleSurnameChange}/>
@@ -148,7 +149,7 @@ const UserDetails = () => {
                         <input type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
                         <p className="small alert-danger">{surnameError}</p>
                     </form>
-                    <form className="mb-5" onSubmit={handleSubmitUsernameChange}>
+                    <form id="username-change-form" className="mb-5" onSubmit={handleSubmitUsernameChange}>
                         <label>
                             username
                             <input className="form-control col-5" type="text" value={username} onChange={handleUsernameChange}/>
@@ -156,7 +157,7 @@ const UserDetails = () => {
                         <input type="submit" className="btn btn-outline-primary ms-2" value="Edit"/>
                         <p className="small alert-danger">{usernameError}</p>
                     </form>
-                    <form className="mb-5" onSubmit={handleSubmitEmailChange}>
+                    <form id="email-change-form" className="mb-5" onSubmit={handleSubmitEmailChange}>
                         <label>
                             email
                             <input className="form-control col-5" type="email" value={email} onChange={handleEmailChange}/>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Register from '../components/register/Register'
 import {mount, shallow} from 'enzyme'
 import {waitFor} from "@testing-library/react";
 import axios from "axios";
