@@ -6,7 +6,6 @@ import axios from "axios";
 import {addUser} from "../../redux/actions/userActions";
 import ErrorModal from "../modals/ErrorModal";
 import {validateFromApi, validateName} from "../../validators/UserValidators";
-import data from "bootstrap/js/src/dom/data";
 
 const UserDetails = () => {
 
