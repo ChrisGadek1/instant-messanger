@@ -21,7 +21,8 @@ const NavMenu = () => {
     return(
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                { user === null || user.name === undefined ? <NavButton name={"Login"} href="/login" onClick={null}/> : <NavButton name={"Logout"} onClick={handleLogout} href="#"/> }
+                { user === null || user.name === undefined ? <NavButton name={"Login"} href="/login" onClick={null}/> : <NavButton name={"Logout"} onClick={handleLogout} href="/"/> }
+                { user !== null && user.name !== undefined ? <NavButton name={`${user.username}`} onClick={null} href={`/users/${user.username}`}/> : null}
             </ul>
         </div>
     )

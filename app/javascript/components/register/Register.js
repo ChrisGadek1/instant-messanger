@@ -1,14 +1,21 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import RegisterModal from "./RegisterModal";
+import RegisterModal from "../modals/RegisterModal";
 import { useNavigate } from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addUser} from "../../redux/actions/userActions";
+import {
+    validateName,
+    validateFromApi,
+    validatePassword,
+    validateRepeatPassword
+} from "../../validators/UserValidators";
 
 const Register = () => {
 
     const navigate = useNavigate();
     const dispatcher = useDispatch();
+    const user = useSelector(store => store.user);
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
@@ -35,90 +42,20 @@ const Register = () => {
     const handleRepeatPasswordChange = (e) => setRepeatPassword(e.target.value);
     const handleEmailChange = (e) => setEmail(e.target.value);
 
-    const validate = (value, name) => {
-        let letterNumber = /^[0-9a-zA-Z]+$/;
-        if(value.length < 2){
-            return `${name} must be longer than 1 character`
-        }
-        else if(value.length > 100){
-            return `${name} must be shorter than 100 characters`
-        }
-        else if(name !== "password" && name !== "email" && !value.match(letterNumber)){
-            return `${name} must contain only digits and numbers`
-        }
-        return ""
-    }
 
-    const validateEmail = (value, name) => {
-        let result = validate(value, "email");
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(!value.toLowerCase().match(emailRegex)){
-            result = `This is not a correct email`
+
+    useEffect(() => {
+        if(user !== null && user.name !== undefined){
+            navigate("/");
         }
-        return result;
-    }
-
-    const validatePassword = (value) => {
-        let result = validate(value, "password");
-        if(value.length < 8){
-            result = "password must be longer than 7 characters";
-        }
-        return result;
-    }
-
-    const validateRepeatPassword = (repeatPassword) => {
-        if(password !== repeatPassword){
-            return "repeated password isn't equal to the password"
-        }
-        return ""
-    }
-
-    const getIsTakenError = (value, name, url, testData) => {
-        return new Promise((resolve, reject) => {
-            axios({
-                method: "POST",
-                url: url,
-                data:{
-                    value: value,
-                    authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(({data}) => {
-                if(data[testData]){
-                    resolve(`This ${name} is already taken`)
-                }
-                else{
-                    resolve("");
-                }
-            }).catch(e => {
-                console.error(e)
-                reject("there was an error with connection")
-            })
-        })
-    }
-
-    const validateFromApi = async (value, name, url, testData, isEmail) => {
-        return new Promise((resolve) => {
-            let result = "";
-            result = validate(value, name)
-            if(isEmail && result === ""){
-                result = validateEmail(value, name)
-            }
-            if(result === ""){
-                result = getIsTakenError(value, name, url, testData);
-            }
-            resolve(result)
-        })
-    }
+    },[user])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setNameError(validate(name, "name"));
-        setSurnameError(validate(surname, "surname"));
+        setNameError(validateName(name, "name"));
+        setSurnameError(validateName(surname, "surname"));
         setPasswordError(validatePassword(password));
-        setRepeatedPasswordError(validateRepeatPassword(repeatPassword));
+        setRepeatedPasswordError(validateRepeatPassword(password,repeatPassword));
         setShowSpinner(true);
         let emailError = ""
         try{
@@ -138,8 +75,7 @@ const Register = () => {
             setUsernameError(e);
             setShowSpinner(false);
         }
-
-        if(validate(name, "name") === "" && validate(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(repeatPassword) === "" && emailError === "" && usernameError === ""){
+        if(validateName(name, "name") === "" && validateName(surname, "surname") === "" && validatePassword(password) === "" && validateRepeatPassword(password, repeatPassword) === "" && emailError === "" && usernameError === ""){
             axios({
                 method: "POST",
                 url: "/users",
@@ -188,7 +124,8 @@ const Register = () => {
                 name,
                 surname,
                 username,
-                email
+                email,
+                avatar: undefined
             }))
             setShowDialog(false)
             navigate("/");
