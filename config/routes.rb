@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post :get_by_email, on: :collection, to: "users#get_by_email"
     post :get_by_username, on: :collection, to: "users#get_by_username"
     post :attach_avatar, to: "users#attach_new_avatar"
+    get '/find_people/:search_phrase', to: "users#find_people"
     delete :remove_avatar, to: "users#remove_avatar"
     resources :conversations
   end
