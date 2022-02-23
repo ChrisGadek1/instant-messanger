@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_secure_password
 
   has_one_attached :avatar
+  has_and_belongs_to_many :conversations
 
   validates :name, presence: true, length: { minimum: 2, maximum: 100 }, format: { with: alphanumeric_regex }
   validates :surname, presence: true, length: { minimum: 2, maximum: 100 }, format: { with: alphanumeric_regex }
