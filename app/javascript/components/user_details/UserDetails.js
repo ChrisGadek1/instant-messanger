@@ -34,7 +34,7 @@ const UserDetails = () => {
     const handleAvatarsChange = (e) => setAvatars([...e.target.files])
 
     const updateUser = (newUser) => {
-        axios.put(`/users/${newUser.username}`, {
+        axios.put(`/users`, {
             username: newUser.username,
             name: newUser.name,
             surname: newUser.surname,
@@ -100,14 +100,14 @@ const UserDetails = () => {
         let formData = new FormData();
         formData.append("image", avatars[0]);
         formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
-        axios.post("/users/:user_id/attach_avatar", formData).then(({data}) => {
+        axios.post("/users/attach_avatar", formData).then(({data}) => {
             dispatcher(addUser({name: user.name, surname: user.surname, username: user.username, email: user.email, avatar: data.url}))
         });
     }
 
     const handleSubmitAvatarRemove = (e) => {
         e.preventDefault();
-        axios.delete(`/users/${user.username}/remove_avatar`, {
+        axios.delete(`/users/remove_avatar`, {
             data: {
                 authenticity_token: document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : ""
             }

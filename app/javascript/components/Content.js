@@ -43,7 +43,7 @@ const Content = () => {
                 <Route path="/" exact element={<Dashboard />}/>
                 <Route path="/login" exact element={<Login />}/>
                 <Route path="/users/new" exact element={<Register />}/>
-                <Route path="/users/:id" exact element={<UserDetails />}/>
+                <Route path="/users" exact element={<UserDetails />}/>
             </Routes>
         </div>
     )
