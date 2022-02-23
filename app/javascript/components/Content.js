@@ -10,6 +10,7 @@ import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {addUser, removeUser} from "../redux/actions/userActions";
 import UserDetails from "./user_details/UserDetails";
+import Conversations from "./conversations/Conversations";
 
 const Content = () => {
 
@@ -44,6 +45,7 @@ const Content = () => {
                 <Route path="/login" exact element={<Login />}/>
                 <Route path="/users/new" exact element={<Register />}/>
                 <Route path="/users" exact element={<UserDetails />}/>
+                <Route path="/users/conversations" exact element={<Conversations />} />
             </Routes>
         </div>
     )
