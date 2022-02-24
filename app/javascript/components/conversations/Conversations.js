@@ -1,8 +1,16 @@
-import React from "react";
 import {Card} from "react-bootstrap";
-import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+import axios from "axios";
+import React, {useState} from "react";
+import SelectOneUser from "../select_users/SelectOneUser";
 
 const Conversations = () => {
+
+    const [selectedUser, setSelectedUser] = useState({});
+    const handleSelectedUserChange = (user) => setSelectedUser(user);
+
+
+
 
     return(
         <Card className="col-sm-10 col-lg-6 col-md-8">
@@ -11,9 +19,7 @@ const Conversations = () => {
             </Card.Header>
             <Card.Body>
                 <p>Search for people to start private conversation</p>
-                <Select>
-
-                </Select>
+                <SelectOneUser onChange={handleSelectedUserChange}/>
             </Card.Body>
         </Card>
     )

@@ -38,16 +38,16 @@ class UsersController < ApplicationController
     words = params[:search_phrase].split(' ')
     found_users = []
     words.each do |word|
-      found_users += User.where('name LIKE ?', "%#{word}%")
-      found_users += User.where('surname LIKE ?', "%#{word}%")
-      found_users += User.where('username LIKE ?', "%#{word}%")
+      found_users += User.where('name LIKE ?', "%#{word}%").limit(20)
+      found_users += User.where('surname LIKE ?', "%#{word}%").limit(20)
+      found_users += User.where('username LIKE ?', "%#{word}%").limit(20)
     end
     result = []
     found_users.each do |found_user|
       avatar = found_user.avatar.attached? ? url_for(found_user.avatar) : image_url("default-avatar.jpg")
       result.append({name: found_user.name, surname: found_user.surname, username: found_user.username, avatar: avatar })
     end
-    render json: { status: 'OK', foundUsers: result }
+    render json: { status: 'OK', foundUsers: result.uniq }
   end
 
   def attach_new_avatar
