@@ -141,7 +141,7 @@ const UserDetails = () => {
     return(
         <>
             {show ? <ErrorModal error={error} click={hideModal}  show={show}/> : null }
-            <Card className="col-lg-6 col-sm-10">
+            <Card className="col-10 col-lg-6 col-sm-10">
                 <Card.Header>
                     <Card.Title>My Account</Card.Title>
                 </Card.Header>

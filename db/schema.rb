@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_23_010647) do
+ActiveRecord::Schema.define(version: 2022_02_24_010740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,10 @@ ActiveRecord::Schema.define(version: 2022_02_23_010647) do
   create_table "conversations", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "title"
+    t.boolean "can_add_users"
+    t.boolean "can_change_title"
+    t.boolean "can_change_avatar"
   end
 
   create_table "conversations_users", id: false, force: :cascade do |t|

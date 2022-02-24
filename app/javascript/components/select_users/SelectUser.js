@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import AsyncSelect from "react-select/async/dist/react-select.esm";
 
-const SelectOneUser = ({onChange}) => {
+const SelectUser = ({onChange, isMulti}) => {
     const getNewUsers = async (searchPhrase) => {
         if(searchPhrase.length === 0){
             return new Promise(resolve => {
@@ -23,9 +23,12 @@ const SelectOneUser = ({onChange}) => {
             cb([]);
         }
         const foundUsers = await getNewUsers(input);
-        cb(foundUsers.map(foundUser => ({
-            value: foundUser,
-            label: <div key={foundUser.username+"searchlist"} className="d-flex flex-row">
+        cb(foundUsers.map((foundUser) => ({
+            value: {
+                ...foundUser,
+                toString: () => foundUser.username+"searchlist"
+            },
+            label: <div className="d-flex flex-row">
                 <img src={foundUser.avatar} width="30px" height="30px" className="me-3"/>
                 {foundUser.name} {foundUser.surname} (@{foundUser.username})
             </div>})));
@@ -36,9 +39,10 @@ const SelectOneUser = ({onChange}) => {
             loadOptions={loadOptions}
             placeholder="Enter name, surname or user name"
             onChange={onChange}
+            isMulti={isMulti}
         >
         </AsyncSelect>
     )
 }
 
-export default SelectOneUser;
+export default SelectUser;
