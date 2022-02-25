@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_24_010740) do
+ActiveRecord::Schema.define(version: 2022_02_25_031323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,24 +46,38 @@ ActiveRecord::Schema.define(version: 2022_02_24_010740) do
   create_table "conversations", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "title"
-    t.boolean "can_add_users"
-    t.boolean "can_change_title"
-    t.boolean "can_change_avatar"
   end
 
-  create_table "conversations_users", id: false, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "conversation_id", null: false
+  create_table "group_conversations", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "group_conversations_users", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "user_id"
+    t.integer "group_conversation_id"
   end
 
   create_table "messages", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "conversations_id"
+    t.bigint "group_conversation_id"
+    t.bigint "private_conversation_id"
     t.string "text"
     t.boolean "viewed"
-    t.index ["conversations_id"], name: "index_messages_on_conversations_id"
+    t.index ["group_conversation_id"], name: "index_messages_on_group_conversation_id"
+    t.index ["private_conversation_id"], name: "index_messages_on_private_conversation_id"
+  end
+
+  create_table "private_conversations", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "addressee"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_private_conversations_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -78,4 +92,5 @@ ActiveRecord::Schema.define(version: 2022_02_24_010740) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "private_conversations", "users", column: "addressee"
 end

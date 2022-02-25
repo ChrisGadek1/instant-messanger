@@ -1,11 +1,14 @@
 import {Card} from "react-bootstrap";
 import React, {useState} from "react";
 import SelectUser from "../select_users/SelectUser";
+import axios from "axios";
 
 const CreateConversation = () => {
 
     const [selectedUser, setSelectedUser] = useState({});
-    const handleSelectedUserChange = (user) => setSelectedUser(user);
+    const handleSelectedUserChange = (option) => {
+        setSelectedUser(option.value);
+    }
 
     const [selectedUsers, setSelectedUsers] = useState([]);
     const handleSelectedUsersChange = (users) => setSelectedUsers(users);
@@ -17,7 +20,16 @@ const CreateConversation = () => {
     const handleChangeConversationName = (e) => setConversationName(e.target.value);
 
     const handleGoToPrivateConversation = () => {
+        let formData = new FormData();
+        formData.append("title", `${selectedUser.name} ${selectedUser.surname} (@${selectedUser.username})`)
+        formData.append("username", selectedUser.username);
+        formData.append("isPrivate", "true");
+        formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
+        axios.post("/users/conversations", formData).then(({data}) => {
 
+        }).catch(e => {
+            console.log(e);
+        })
     }
 
     return(
