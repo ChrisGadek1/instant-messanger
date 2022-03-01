@@ -39,7 +39,10 @@ const Conversation = () => {
                         </div>}
                     </div>
                     <hr />
-
+                    <div>
+                        <textarea className="form-control" style={{backgroundColor: "#cfd7e3"}}></textarea>
+                        <button className="btn btn-primary mt-3">Send</button>
+                    </div>
                 </Card.Body>
             </Card> : <Spinning />}
         </>
