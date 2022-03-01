@@ -18,7 +18,18 @@ class ConversationsController < ApplicationController
              status: :unauthorized
     else
       conversation = PrivateConversation.find(params[:conversation_id])
-      render json: { status: 'OK', conversation: { id: conversation.id, messages: conversation.messages } }
+      addressee = User.find(conversation.addressee)
+      render json: { status: 'OK',
+                     conversation: {
+                       id: conversation.id,
+                       addressee: {
+                         name: addressee.name,
+                         surname: addressee.surname,
+                         username: addressee.username,
+                         avatar: url_for(addressee.avatar)
+                       },
+                       messages: conversation.messages }
+      }
     end
   end
 
@@ -36,9 +47,20 @@ class ConversationsController < ApplicationController
           @new_other_private_conversation = PrivateConversation.create(user: second_user, addressee: @user.id)
           @new_private_conversation.save!
           @new_other_private_conversation.save!
+          addressee = User.find(private_conversations[0].addressee)
           render json: { status: 'OK', message: 'created new', conversation: { id: @new_private_conversation.id, messages: @new_private_conversation.messages } }, status: :ok
         else
-          render json: { status: 'OK', message: 'conversation already created', conversation: { id: private_conversations[0].id, messages: private_conversations[0].messages } }
+          render json: { status: 'OK',
+                         message: 'conversation already created',
+                         conversation: { id: private_conversations[0].id,
+                                         addressee: {
+                                           name: addressee.name,
+                                           surname: addressee.surname,
+                                           username: addressee.username,
+                                           avatar: url_for(addressee.avatar)
+                                         },
+                                         messages: private_conversations[0].messages }
+          }
         end
 
 

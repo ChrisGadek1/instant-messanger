@@ -35,7 +35,7 @@ const CreateConversation = () => {
         axios.post("/users/conversations", formData).then(({data}) => {
             console.log( { conversation: { id: data.conversation.id, messages: data.conversation.messages}} )
             if(conversations.find(conv => conv.id === data.conversation.id) === undefined){
-                dispatcher(addConversation({ conversation: { id: data.conversation.id, messages: data.conversation.messages}} ))
+                dispatcher(addConversation({ conversation: data.conversation } ))
             }
             navigate(`/users/conversations/${data.conversation.id}`);
         }).catch(e => {
