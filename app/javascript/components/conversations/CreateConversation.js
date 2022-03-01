@@ -2,8 +2,15 @@ import {Card} from "react-bootstrap";
 import React, {useState} from "react";
 import SelectUser from "../select_users/SelectUser";
 import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import {addConversation} from "../../redux/actions/conversationsActions";
+import {useNavigate} from "react-router-dom";
 
 const CreateConversation = () => {
+
+    const dispatcher = useDispatch();
+    const conversations = useSelector(store => store.conversations)
+    const navigate = useNavigate();
 
     const [selectedUser, setSelectedUser] = useState({});
     const handleSelectedUserChange = (option) => {
@@ -26,7 +33,11 @@ const CreateConversation = () => {
         formData.append("isPrivate", "true");
         formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
         axios.post("/users/conversations", formData).then(({data}) => {
-
+            console.log( { conversation: { id: data.conversation.id, messages: data.conversation.messages}} )
+            if(conversations.find(conv => conv.id === data.conversation.id) === undefined){
+                dispatcher(addConversation({ conversation: { id: data.conversation.id, messages: data.conversation.messages}} ))
+            }
+            navigate(`/users/conversations/${data.conversation.id}`);
         }).catch(e => {
             console.log(e);
         })

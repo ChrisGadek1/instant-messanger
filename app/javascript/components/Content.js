@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {addUser, removeUser} from "../redux/actions/userActions";
 import UserDetails from "./user_details/UserDetails";
 import CreateConversation from "./conversations/CreateConversation";
+import Conversation from "./conversations/Conversation";
 
 const Content = () => {
 
@@ -45,6 +46,7 @@ const Content = () => {
                 <Route path="/login" exact element={<Login />}/>
                 <Route path="/users/new" exact element={<Register />}/>
                 <Route path="/users" exact element={<UserDetails />}/>
+                <Route path="/users/conversations/:id" element={<Conversation />}/>
                 <Route path="/users/conversations/new" exact element={<CreateConversation />} />
             </Routes>
         </div>

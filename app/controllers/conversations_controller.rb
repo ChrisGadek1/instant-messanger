@@ -7,6 +7,21 @@ class ConversationsController < ApplicationController
 
   end
 
+  def show
+
+  end
+
+  def get_conversation
+    @user = current_user
+    if @user.nil?
+      render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
+             status: :unauthorized
+    else
+      conversation = PrivateConversation.find(params[:conversation_id])
+      render json: { status: 'OK', conversation: { id: conversation.id, messages: conversation.messages } }
+    end
+  end
+
   def create
     @user = current_user
     if @user.nil?
@@ -21,9 +36,9 @@ class ConversationsController < ApplicationController
           @new_other_private_conversation = PrivateConversation.create(user: second_user, addressee: @user.id)
           @new_private_conversation.save!
           @new_other_private_conversation.save!
-          render json: { status: 'OK', message: '' }, status: :ok
+          render json: { status: 'OK', message: 'created new', conversation: { id: @new_private_conversation.id, messages: @new_private_conversation.messages } }, status: :ok
         else
-          render json: { status: 'OK', conversation: { id: private_conversations[0].id, messages: private_conversations[0].messages } }
+          render json: { status: 'OK', message: 'conversation already created', conversation: { id: private_conversations[0].id, messages: private_conversations[0].messages } }
         end
 
 
