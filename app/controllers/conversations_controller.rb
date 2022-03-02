@@ -17,19 +17,9 @@ class ConversationsController < ApplicationController
       render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
              status: :unauthorized
     else
-      conversation = PrivateConversation.find(params[:conversation_id])
-      addressee = User.find(conversation.addressee)
-      render json: { status: 'OK',
-                     conversation: {
-                       id: conversation.id,
-                       addressee: {
-                         name: addressee.name,
-                         surname: addressee.surname,
-                         username: addressee.username,
-                         avatar: url_for(addressee.avatar)
-                       },
-                       messages: conversation.messages }
-      }
+      conversation = Conversation.find(params[:conversation_id])
+      render json: { status: 'OK', conversation: conversation, messages: conversation.messages,
+                     users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) }
     end
   end
 
@@ -39,34 +29,51 @@ class ConversationsController < ApplicationController
       render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
              status: :unauthorized
     else
-      if params[:isPrivate] == "true"
-        second_user = User.where(username: params[:username])[0]
-        private_conversations = PrivateConversation.where(user_id: @user.id, addressee: second_user.id)
-        if private_conversations.length.zero?
-          @new_private_conversation = PrivateConversation.create(user: @user, addressee: second_user.id)
-          @new_other_private_conversation = PrivateConversation.create(user: second_user, addressee: @user.id)
-          @new_private_conversation.save!
-          @new_other_private_conversation.save!
-          addressee = User.find(private_conversations[0].addressee)
-          render json: { status: 'OK', message: 'created new', conversation: { id: @new_private_conversation.id, messages: @new_private_conversation.messages } }, status: :ok
-        else
-          render json: { status: 'OK',
-                         message: 'conversation already created',
-                         conversation: { id: private_conversations[0].id,
-                                         addressee: {
-                                           name: addressee.name,
-                                           surname: addressee.surname,
-                                           username: addressee.username,
-                                           avatar: url_for(addressee.avatar)
-                                         },
-                                         messages: private_conversations[0].messages }
-          }
-        end
-
-
+      second_user = User.where(username: params[:username])[0]
+      conversation = get_private_conversation_with_two_users @user, second_user
+      if conversation.nil?
+        conversation = Conversation.create(is_private: params[:is_private] == 'true')
+        conversation.users.append(@user)
+        conversation.users.append(second_user) if second_user.id != @user.id
+        conversation.save!
+        render json: { status: 'OK', conversation: conversation, users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) }
+      else
+        render json: { status: 'OK', conversation: conversation,
+                       users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq),
+                       messages: conversation.messages }
       end
-
     end
 
+  end
+
+  private
+
+  def transform_users(users)
+    users.map { |user|
+      {
+        id: user.id,
+        name: user.name, surname: user.surname,
+        username: user.username,
+        avatar: url_for(user.avatar) }
+    }
+  end
+
+  def get_private_conversations_by_user(user)
+    Conversation.select(:id).select('COUNT("users"."id")').joins(:users).where(users: user).group(:id).having('COUNT("users"."id") = 2 OR COUNT("users"."id") = 1')
+  end
+
+  def get_private_conversation_with_two_users(user1, user2)
+    conversations = []
+    all_private_conversations = get_private_conversations_by_user user1
+    all_private_conversations.each do |private_conversation|
+      if user1.id != user2.id
+        conv = Conversation.find(private_conversation.id).users.find { |user| user.id == user2.id }
+        conversations.append(Conversation.find(private_conversation.id)) unless conv.nil?
+      else
+        conv = Conversation.find(private_conversation.id)
+        conversations.append(conv) if conv.users.length == 1
+      end
+    end
+    conversations.length.zero? ? nil : conversations[0]
   end
 end

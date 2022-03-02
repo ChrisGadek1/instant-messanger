@@ -28,14 +28,14 @@ const CreateConversation = () => {
 
     const handleGoToPrivateConversation = () => {
         let formData = new FormData();
-        formData.append("title", `${selectedUser.name} ${selectedUser.surname} (@${selectedUser.username})`)
         formData.append("username", selectedUser.username);
-        formData.append("isPrivate", "true");
+        formData.append("is_private", "true");
         formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
         axios.post("/users/conversations", formData).then(({data}) => {
-            console.log( { conversation: { id: data.conversation.id, messages: data.conversation.messages}} )
             if(conversations.find(conv => conv.id === data.conversation.id) === undefined){
-                dispatcher(addConversation({ conversation: data.conversation } ))
+                const conversation = data.conversation
+                conversation["messages"] = data.messages
+                dispatcher(addConversation({ conversation }));
             }
             navigate(`/users/conversations/${data.conversation.id}`);
         }).catch(e => {

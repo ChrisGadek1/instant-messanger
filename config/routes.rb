@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     delete :remove_avatar, to: "users#remove_avatar"
     resources :conversations do
       get '/get_conversation', to: 'conversations#get_conversation', param: :id
+
+      resource :messages
     end
   end
 end
