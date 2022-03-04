@@ -1,6 +1,6 @@
 class ConversationsController < ApplicationController
   def index
-    
+
   end
 
   def new
@@ -20,6 +20,19 @@ class ConversationsController < ApplicationController
       conversation = Conversation.find(params[:conversation_id])
       render json: { status: 'OK', conversation: { data: conversation, messages: conversation.messages,
                                                    users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) } }
+    end
+  end
+
+  def get_all_conversations
+    @user = current_user
+    if @user.nil?
+      render json: { status: 'error', message: 'You are not authorized to do this operation. Probably you have been logged out, try again after login.' },
+             status: :unauthorized
+    else
+      result = get_all_conversations_by_user(@user).map do |conv|
+        { data: conv, messages: conv.messages, users: transform_users(User.joins(:conversation).where(conversations: conv).uniq) }
+      end
+      render json: { status: 'OK', conversations: result }
     end
   end
 
@@ -49,17 +62,21 @@ class ConversationsController < ApplicationController
   private
 
   def transform_users(users)
-    users.map { |user|
+    users.map do |user|
       {
         id: user.id,
         name: user.name, surname: user.surname,
         username: user.username,
         avatar: url_for(user.avatar) }
-    }
+    end
   end
 
   def get_private_conversations_by_user(user)
     Conversation.select(:id).select('COUNT("users"."id")').joins(:users).where(users: user).group(:id).having('COUNT("users"."id") = 2 OR COUNT("users"."id") = 1')
+  end
+  
+  def get_all_conversations_by_user(user)
+    Conversation.joins(:users).where(users: user)
   end
 
   def get_private_conversation_with_two_users(user1, user2)

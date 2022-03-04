@@ -13,9 +13,11 @@ Rails.application.routes.draw do
     get '/find_people/:search_phrase', to: "users#find_people"
     delete :remove_avatar, to: "users#remove_avatar"
     resources :conversations do
-      get '/get_conversation', to: 'conversations#get_conversation', param: :id
-
+      get '/get_conversation', to: 'conversations#get_conversation'
       resource :messages
+    end
+    resource :conversation do
+      get '/get_all_conversations', to: "conversations#get_all_conversations"
     end
   end
 end

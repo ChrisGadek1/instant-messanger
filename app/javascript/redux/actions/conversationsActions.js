@@ -2,6 +2,12 @@ export const ADD_CONVERSATION = "ADD_CONVERSATION"
 export const REMOVE_CONVERSATION = "REMOVE_CONVERSATION"
 export const ADD_MESSAGE = "ADD_MESSAGE"
 export const REMOVE_MESSAGE = "REMOVE_MESSAGE"
+export const ADD_CONVERSATIONS = "ADD_CONVERSATIONS"
+
+export const addConversations = ({conversations}) => ({
+    type: ADD_CONVERSATIONS,
+    payload: conversations
+})
 
 export const addConversation = ({conversation}) => ({
     type: ADD_CONVERSATION,

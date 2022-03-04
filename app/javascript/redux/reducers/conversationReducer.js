@@ -1,5 +1,5 @@
 import {
-    ADD_CONVERSATION,
+    ADD_CONVERSATION, ADD_CONVERSATIONS,
     ADD_MESSAGE,
     REMOVE_CONVERSATION,
     REMOVE_MESSAGE
@@ -10,6 +10,8 @@ export const conversationReducer = (state = [], action) => {
     switch (action.type){
         case ADD_CONVERSATION:
             return [...state, action.payload]
+        case ADD_CONVERSATIONS:
+            return state.concat(action.payload)
         case REMOVE_CONVERSATION:
             return [...state.filter(conversation => conversation.id !== action.payload)]
         case ADD_MESSAGE:
@@ -18,7 +20,7 @@ export const conversationReducer = (state = [], action) => {
             return [...newState]
         case REMOVE_MESSAGE:
             let newState2 = state
-            newState.find(conversation => conversation.id === action.payload.conversation_id).messages.filter(message => message.id !== action.payload.message_id)
+            newState2.find(conversation => conversation.id === action.payload.conversation_id).messages.filter(message => message.id !== action.payload.message_id)
             return [...newState2]
         default:
             return state
