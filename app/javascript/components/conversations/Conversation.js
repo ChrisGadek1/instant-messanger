@@ -30,28 +30,32 @@ const Conversation = () => {
         })
     }
 
+    const instantiateSecondUser = (conversation) => {
+        if(conversation.data.is_private && currentUser !== null){
+            const tmpSecondUser = conversation.users.find(user => user.username !== currentUser.username)
+            if(tmpSecondUser === undefined){
+                setSecondUser(currentUser)
+            }
+            else{
+                setSecondUser(tmpSecondUser)
+            }
+        }
+    }
+
     useEffect(() => {
-        console.log(conversations)
-        console.log(id)
-        if(!conversations.find(conv => conv.id.toString() === id)){
+        if(!conversations.find(conv => conv.data.id.toString() === id)){
             axios.get(`/users/conversations/${id}/get_conversation`).then(({data}) => {
                 const conversation = data.conversation
-                conversation["messages"] = data.messages
                 dispatcher(addConversation({ conversation }));
                 setConversation(conversation)
-                if(conversation.is_private && currentUser !== null){
-                    const tmpSecondUser = data.users.find(user => user.username !== currentUser.username)
-                    if(tmpSecondUser === undefined){
-                        setSecondUser(currentUser)
-                    }
-                    else{
-                        setSecondUser(tmpSecondUser)
-                    }
-
-                }
+                instantiateSecondUser(conversation)
             }).catch((e) => {
                 console.error(e);
             })
+        }
+        else{
+            setConversation(conversations.find(conv => conv.data.id.toString() === id))
+            instantiateSecondUser(conversations.find(conv => conv.data.id.toString() === id))
         }
     },[conversations, currentUser])
 

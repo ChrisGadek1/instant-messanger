@@ -32,12 +32,11 @@ const CreateConversation = () => {
         formData.append("is_private", "true");
         formData.append("authenticity_token", document.querySelector("meta[name=csrf-token]") !== null ? document.querySelector("meta[name=csrf-token]").content : "")
         axios.post("/users/conversations", formData).then(({data}) => {
-            if(conversations.find(conv => conv.id === data.conversation.id) === undefined){
+            if(conversations.find(conv => conv.data.id === data.conversation.id) === undefined){
                 const conversation = data.conversation
-                conversation["messages"] = data.messages
                 dispatcher(addConversation({ conversation }));
             }
-            navigate(`/users/conversations/${data.conversation.id}`);
+            navigate(`/users/conversations/${data.conversation.data.id}`);
         }).catch(e => {
             console.log(e);
         })

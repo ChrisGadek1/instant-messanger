@@ -18,8 +18,8 @@ class ConversationsController < ApplicationController
              status: :unauthorized
     else
       conversation = Conversation.find(params[:conversation_id])
-      render json: { status: 'OK', conversation: conversation, messages: conversation.messages,
-                     users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) }
+      render json: { status: 'OK', conversation: { data: conversation, messages: conversation.messages,
+                                                   users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) } }
     end
   end
 
@@ -36,11 +36,11 @@ class ConversationsController < ApplicationController
         conversation.users.append(@user)
         conversation.users.append(second_user) if second_user.id != @user.id
         conversation.save!
-        render json: { status: 'OK', conversation: conversation, users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq) }
+        render json: { status: 'OK', conversation: { data: conversation, users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq)} }
       else
-        render json: { status: 'OK', conversation: conversation,
-                       users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq),
-                       messages: conversation.messages }
+        render json: { status: 'OK', conversation: { data: conversation,
+                                                     users: transform_users(User.joins(:conversation).where(conversations: conversation).uniq),
+                                                     messages: conversation.messages }}
       end
     end
 
